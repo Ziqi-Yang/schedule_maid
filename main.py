@@ -1,6 +1,9 @@
 import yaml
-from yaml.loader import Loader
+import XiaoYiJiang
+
 
 # read config from config.yaml
 with open("_config.yaml") as f:
-    a = yaml.load(f.read(),Loader=Loader)
+    a = yaml.load(f.read(),Loader=yaml.loader.Loader)
+
+
