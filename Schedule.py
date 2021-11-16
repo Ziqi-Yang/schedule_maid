@@ -8,6 +8,7 @@ class Schedule:
     def __init__(self,excel_path):
         self.schedule = read_excel(excel_path,engine="openpyxl",index_col=0)
 
+
     def check_sch(self):
         """ check the schedule sheet for compliance
         supported label: "multi","section"
@@ -15,8 +16,9 @@ class Schedule:
             "section": combine the current cell with the lower cell(lower cell should be blank or has "section" label only)
         anything in the brackets will be ignored when parsing, but them will be in the body message(i.e. they will be sent)
         """
+        # FIXME need to support label
         self.scheduled_times = scheduleTime.ScheduleTime(self.schedule.index[1:])
-    
+
     def getTodaySch(self,weekday):
         self.todaySch = self.schedule.iloc[:,weekday]
         

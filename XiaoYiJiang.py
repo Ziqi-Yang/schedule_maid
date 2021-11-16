@@ -6,7 +6,7 @@ from os import path
 
 
 class XiaoYiJiang:
-    def __init__(self,CORPID,CORPSECRET,AGENTID,TOUSER):
+    def __init__(self,CORPID,CORPSECRET,AGENTID,TOUSER,scriptFolderPath):
         self.CORPID = CORPID
         self.CORPSECRET = CORPSECRET
         self.AGENTID = AGENTID
@@ -14,7 +14,7 @@ class XiaoYiJiang:
         self.ACCESS_TOKEN = None # need to get
 
         self.token_expires_time = 7200 #ACCESS_TOKEN expires_time
-        self.scriptFolderPath = sys.path[0]
+        self.scriptFolderPath = scriptFolderPath
         self.tokenFilePath = path.join(self.scriptFolderPath, "token_time_log.pkl")
         self.daily_greetings = "主人，今天又是新的一天。干劲满满哦！"
     
@@ -36,6 +36,7 @@ class XiaoYiJiang:
             rq = requests.get(url).json()
             # return rq.json
             self.ACCESS_TOKEN = rq["access_token"]
+
 
     # def sendMessage(message):
         
