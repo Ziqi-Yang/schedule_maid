@@ -4,18 +4,18 @@ import re
 
 class ScheduleTime:
     def __init__(self,timeIntervals: list):
-        self.schedule = [TimeInterval(x) for x in timeIntervals]
+        self.schedule = [TimeInterval(x).time_interval for x in timeIntervals]
         formerTime = datetime.strptime("00:00","%H:%M")
         for index in range(len(self.schedule)-1):
-            time_interval = self.schedule[index].time_interval
+            time_interval = self.schedule[index]
             if time_interval[0] >= time_interval[1] and index <= len(self.schedule)//2: # normally the former half of time interval don't across a day
                 raise Exception("the num {} of the given time Strings is not available, for the former one should be earlier than the latter one".format(index + 1))
             if time_interval[0] < formerTime:
                 raise Exception("Time overlaped!")
             formerTime = time_interval[1]
-        if self.schedule[-1].time_interval[0] < formerTime:
+        if self.schedule[-1][0] < formerTime:
             raise Exception("Time overlaped!")
-        if self.schedule[-1].time_interval[1] >= self.schedule[0].time_interval[0]:
+        if self.schedule[-1][1] >= self.schedule[0][0]:
             raise Exception("Time overlaped!")
 
 class TimeInterval:
