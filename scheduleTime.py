@@ -22,7 +22,7 @@ class TimeInterval:
     def __init__(self,timeInterval: str):
         timeInterval = timeInterval.replace(" ","")
         if "-" not in timeInterval:
-            raise Exception("The format of {} is not allowed.".format(timeStr))
+            raise Exception("The format of {} is not allowed.".format(timeInterval))
         self.time_interval = [self.parseTime(x) for x in timeInterval.split("-")]
         
     def parseTime(self,timeStr):
