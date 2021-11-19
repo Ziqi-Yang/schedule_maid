@@ -33,6 +33,7 @@ class Schedule:
     def getTodaySch(self,weekday):
         weekdayMap = {0:"星期一",1:"星期二",2:"星期三",3:"星期四",4:"星期五",5:"星期六",6:"星期日"}
         self.weekday = weekdayMap[weekday]
+        # self.weekday = "星期六"
         self.todaySch = self.schedule[["time_intervals",self.weekday]]
         self.todayNotice = self.schedule.iloc[0,weekday+1]
         self.todaySch = self.todaySch.drop([0]) # drop notice, don't use inplace parameter because of some rules
@@ -46,7 +47,8 @@ class Schedule:
         """
         schduleIndex = 0 # for addSchdule function
         for index in range(self.todaySch.shape[0]):
-            cell = self.todaySch[self.weekday][index + 1]
+            cellIndex = index + 1 # pd.index label
+            cell = self.todaySch[self.weekday][cellIndex]
             cellLines = cell.strip().split("\n")
             cellMode = cellLines[0][1:-1] if cellLines[0].strip() in ["[multi]","[section]"] else None
             if cellMode == None:
@@ -69,11 +71,22 @@ class Schedule:
                         schduleIndex += 1
 
             elif cellMode == "section":
+                schedule = ""
                 if index == self.todaySch.shape[0] - 1:
                     raise Exception("the [section] label couldn't be replaced in the last schdule")
-                self.todaySch[self.weekday][index + 1] = cellLines[1:] # exlude "[section]" label
+                for line in cellLines:
+                    line = line.strip()
+                    if line[0] == "[" and line[-1] == "]":
+                        continue
+                    else:
+                        schedule += line + "\n"
+                if len(schedule) != 0:
+                    schedule = schedule[:-1] # delete "\n"
+                self.todaySch[self.weekday][cellIndex] = schedule
+                self.todaySch[self.weekday][cellIndex + 1] = "继续-" + schedule
 
             schduleIndex += 1
+        scheduleTime.checkCorrect(list(self.todaySch["time_intervals"])) # check for time overlap
 
     def testSch(self,outFile):
         """
