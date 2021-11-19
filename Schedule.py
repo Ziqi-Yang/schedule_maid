@@ -1,6 +1,7 @@
 from pandas import read_excel
+from time import sleep
 import pandas as pd
-from datetime import datetime
+from datetime import datetime,timedelta
 import re
 import scheduleTime
 
@@ -8,12 +9,14 @@ import scheduleTime
 
 
 class Schedule:
-    def __init__(self,excel_path):
+    def __init__(self,excel_path,advancedRdTime = 10):
+        self.advancedRdTime = advancedRdTime # advanced remind time (minutes)
         self.excelPath = excel_path
         self.schedule = read_excel(excel_path,engine="openpyxl")
         self.initialize()
 
     def initialize(self):
+        print("[*] Read excel file {} done. Start initialization.".format(self.excelPath))
         self.checkSchTime()
         self.testSch()
 
@@ -98,7 +101,7 @@ class Schedule:
         """
         simulate the real excution, and ouput the all days's modified schdule respectively into one file
         """
-        print("[*] Start testing {}, which may takes some time.".format(self.excelPath))
+        print("[*] Start testing excel file, which may takes some time.")
         for i in range(7):
             self.getTodaySch(datetime.today().weekday())
             self.parseCells()
@@ -110,14 +113,27 @@ class Schedule:
     def querySch(self,timeStr):
         """
         timeStr format: '%H:%M' , for example '01:02'
+        NOTICE when in main function in time loop, we need to add sleep(10 * 60)
         """
-        pass
+        def between(time,schIndex):
+            # schIndex is the label name(start from 1)
+            time_interval = self.todaySch["time_intervals"][schIndex]
+            if time >= time_interval[0] + timedelta(minutes=-self.advancedRdTime) and time < time_interval[0]:
+                return True
+            else:
+                return False
+        theTime = scheduleTime.parseTime(timeStr) # check also included in the function
+        for i in range(self.todaySch.shape[0]):
+            schIndex = i + 1
+            if between(theTime,schIndex):
+                return self.todaySch[self.weekday][schIndex]
+
 
 
         
     
 if __name__ == "__main__":
     sch = Schedule("example.xlsx")
-    print(sch.todaySch)
+    print(sch.querySch("22:59"))
 
     # sch.getTodaySch(weekday)

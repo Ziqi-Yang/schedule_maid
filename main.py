@@ -20,10 +20,17 @@ with open("_config.yaml") as f: # FIXME change _config.yaml to config.yaml
 my_schedule = Schedule.Schedule(excelFilePath)
 XiaoYi = XiaoYiJiang.XiaoYiJiang(config["CORPID"],config["CORPSECRET"],config["AGENTID"],config["TOUSER"],scriptFolderPath)
 XiaoYi.get_accessToken()
+message="""`Hello` Sir!""" 
+message = my_schedule.querySch()
+
+def formatMd(text:str):
+    text.replace("\n","  \n")
+
+XiaoYi.sendMessage(message)
 
 # i = 0 # FIXME for test
 # while True:
-
+    
 #     time.sleep(1)
 #     i += 1
 #     if i == 4:

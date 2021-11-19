@@ -8,17 +8,19 @@ import json
 
 
 class XiaoYiJiang:
-    def __init__(self,CORPID,CORPSECRET,AGENTID,TOUSER,scriptFolderPath):
+    def __init__(self,CORPID,CORPSECRET,AGENTID,TOUSER,scriptFolderPath,nickname="主人"):
         self.CORPID = CORPID
         self.CORPSECRET = CORPSECRET
         self.AGENTID = AGENTID
         self.TOUSER = TOUSER # str value, e.x. "aaa|bbbb"
         self.ACCESS_TOKEN = None # need to get
+        self.nickname = nickname # your nickname
 
         self.token_expires_time = 7200 #ACCESS_TOKEN expires_time
         self.scriptFolderPath = scriptFolderPath
         self.tokenFilePath = path.join(self.scriptFolderPath, "token_time_log.pkl")
-        self.morning_greeting = "主人，今天又是新的一天。干劲满满哦！"
+        self.morning_greeting = self.nickname + "，今天又是新的一天。干劲满满哦！"
+
     
     def checkToken(self,curTime):
         """check if current time is in the token expires time"""
