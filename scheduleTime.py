@@ -40,14 +40,14 @@ def checkCorrect(schedule):
     for index in range(len(schedule)-1):
         time_interval = schedule[index]
         if time_interval[0] >= time_interval[1] and index <= len(schedule)//2: # normally the former half of time interval don't across a day
-            raise Exception("the num {} of the given time Strings is not available, for the former one should be earlier than the latter one".format(index + 1))
+            raise Exception("the num {} of the given time intervals is not available, for the former one should be earlier than the latter one, origin: {}".format(index + 1,schedule))
         if time_interval[0] < formerTime:
-            raise Exception("Time overlaped!")
+            raise Exception("Time overlaped! origin:{}".format(schedule))
         formerTime = time_interval[1]
     if schedule[-1][0] < formerTime:
-        raise Exception("Time overlaped!")
+        raise Exception("Time overlaped! origin:{}".format(schedule))
     if schedule[-1][1] >= schedule[0][0]:
-        raise Exception("Time overlaped!")
+        raise Exception("Time overlaped! origin:{}".format(schedule))
 
 if __name__ == "__main__":
     timeStr = [" 00.30 -00.49","00.49- 00.59","00.59-01.10","01.10-01.11","01.11-01.12","01.13-00.29"]

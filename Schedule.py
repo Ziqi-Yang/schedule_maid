@@ -9,11 +9,17 @@ import scheduleTime
 
 class Schedule:
     def __init__(self,excel_path):
+        self.excelPath = excel_path
         self.schedule = read_excel(excel_path,engine="openpyxl")
-        self.checkSch()
-        self.getTodaySch(datetime.today().weekday())
+        self.initialize()
 
-    def checkSch(self):
+    def initialize(self):
+        self.checkSchTime()
+        self.testSch()
+
+
+
+    def checkSchTime(self):
         """ check the schedule sheet for compliance"""
         time_intervals = scheduleTime.ScheduleTime(self.schedule.iloc[1:,0]).schedule
         self.schedule.insert(self.schedule.shape[1],"time_intervals",[None]+time_intervals)
@@ -88,13 +94,18 @@ class Schedule:
             schduleIndex += 1
         scheduleTime.checkCorrect(list(self.todaySch["time_intervals"])) # check for time overlap
 
-    def testSch(self,outFile):
+    def testSch(self):
         """
         simulate the real excution, and ouput the all days's modified schdule respectively into one file
         """
-
-    def parseSingleCell(self,cell):
-        pass
+        print("[*] Start testing {}, which may takes some time.".format(self.excelPath))
+        for i in range(7):
+            self.getTodaySch(datetime.today().weekday())
+            self.parseCells()
+        # restore to today's situation
+        self.getTodaySch(datetime.today().weekday())
+        self.parseCells()
+        print("[*] Test finished. All things are in the right format.")
     
     def querySch(self,timeStr):
         """
@@ -107,7 +118,6 @@ class Schedule:
     
 if __name__ == "__main__":
     sch = Schedule("example.xlsx")
-    sch.parseCells()
     print(sch.todaySch)
 
     # sch.getTodaySch(weekday)

@@ -44,6 +44,7 @@ class XiaoYiJiang:
             f.writelines("[{}] {}]".format(datetime.now(),log))
 
     def sendMessage(self,markdown):
+        """markdown"""
         tmpMsg = {
             "touser" : self.TOUSER,
             "msgtype": "markdown",
