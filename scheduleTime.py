@@ -17,7 +17,7 @@ def checkCorrect(schedule):
         if time_interval[0] >= time_interval[1] and index <= len(schedule)//2: # normally the former half of time interval don't across a day
             raise Exception("the num {} of the given time intervals is not available, for the former one should be earlier than the latter one, origin: {}".format(index + 1,schedule))
         if time_interval[0] < formerTime:
-            raise Exception("Time overlaped! origin:{}".format(schedule))
+            raise Exception("Time overlaped! source: \n{} \nfrom:\n{}".format(time_interval,schedule))
         formerTime = time_interval[1]
     if schedule[-1][0] < formerTime:
         raise Exception("Time overlaped! origin:{}".format(schedule))

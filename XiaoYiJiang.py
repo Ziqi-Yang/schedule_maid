@@ -14,12 +14,14 @@ class XiaoYiJiang:
         self.AGENTID = AGENTID
         self.TOUSER = TOUSER # str value, e.x. "aaa|bbbb"
         self.ACCESS_TOKEN = None # need to get
-        self.nickname = nickname # your nickname
 
         self.token_expires_time = 7200 #ACCESS_TOKEN expires_time
         self.scriptFolderPath = scriptFolderPath
         self.tokenFilePath = path.join(self.scriptFolderPath, "token_time_log.pkl")
+
+        self.nickname = nickname # your nickname
         self.morning_greeting = self.nickname + "，今天又是新的一天。干劲满满哦！"
+        self.prompt = self.nickname + "，加油哦！"
 
     
     def checkToken(self,curTime):
@@ -45,8 +47,13 @@ class XiaoYiJiang:
         with open(path.join(self.scriptFolderPath,"XiaoYi.log"),"a") as f:
             f.writelines("[{}] {}]".format(datetime.now(),log))
 
-    def sendMessage(self,markdown):
+    def sendMessage(self,markdown:str):
         """markdown"""
+        print("[*] Send schedule remind message.")
+        markdown = markdown[:-1] if markdown[-1] == "\n" else markdown
+        markdown = "`" + markdown + "`\n"
+        markdown += self.prompt
+        
         tmpMsg = {
             "touser" : self.TOUSER,
             "msgtype": "markdown",

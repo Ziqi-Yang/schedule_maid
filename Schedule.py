@@ -1,4 +1,7 @@
+from os import times
+from numpy import nan
 from pandas import read_excel
+from pandas import isnull
 from time import sleep
 import pandas as pd
 from datetime import datetime,timedelta
@@ -40,9 +43,8 @@ class Schedule:
 
 
     def getTodaySch(self,weekday):
-        weekdayMap = {0:"星期一",1:"星期二",2:"星期三",3:"星期四",4:"星期五",5:"星期六",6:"星期日"}
+        weekdayMap = {0:"星期一",1:"星期二",2:"星期三",3:"星期四",4:"星期五",5:"星期六",6:"星期天"}
         self.weekday = weekdayMap[weekday]
-        # self.weekday = "星期六"
         self.todaySch = self.schedule[["time_intervals",self.weekday]]
         self.todayNotice = self.schedule.iloc[0,weekday+1]
         self.todaySch = self.todaySch.drop([0]) # drop notice, don't use inplace parameter because of some rules
@@ -58,6 +60,8 @@ class Schedule:
         for index in range(self.todaySch.shape[0]):
             cellIndex = index + 1 # pd.index label
             cell = self.todaySch[self.weekday][cellIndex]
+            if isnull(cell):
+                continue
             cellLines = cell.strip().split("\n")
             cellMode = cellLines[0][1:-1] if cellLines[0].strip() in ["[multi]","[section]"] else None
             if cellMode == None:
@@ -103,7 +107,7 @@ class Schedule:
         """
         print("[*] Start testing excel file, which may takes some time.")
         for i in range(7):
-            self.getTodaySch(datetime.today().weekday())
+            self.getTodaySch(i)
             self.parseCells()
         # restore to today's situation
         self.getTodaySch(datetime.today().weekday())
@@ -122,6 +126,7 @@ class Schedule:
                 return True
             else:
                 return False
+        print("[*] Query time {}".format(timeStr))
         theTime = scheduleTime.parseTime(timeStr) # check also included in the function
         for i in range(self.todaySch.shape[0]):
             schIndex = i + 1
@@ -134,6 +139,7 @@ class Schedule:
     
 if __name__ == "__main__":
     sch = Schedule("example.xlsx")
-    print(sch.querySch("22:59"))
+    # print(sch.todaySch)
+    # print(sch.querySch("22:59"))
 
     # sch.getTodaySch(weekday)
