@@ -1,8 +1,5 @@
-from os import times
-from numpy import nan
 from pandas import read_excel
 from pandas import isnull
-from time import sleep
 import pandas as pd
 from datetime import datetime,timedelta
 import re
@@ -12,8 +9,8 @@ import scheduleTime
 
 
 class Schedule:
-    def __init__(self,excel_path,advancedRdTime = 10):
-        self.advancedRdTime = advancedRdTime # advanced remind time (minutes)
+    def __init__(self,excel_path,advancedRdTime = 10*60):
+        self.advancedRdTime = advancedRdTime # advanced remind time (seconds)
         self.excelPath = excel_path
         self.schedule = read_excel(excel_path,engine="openpyxl")
         self.initialize()
@@ -22,6 +19,7 @@ class Schedule:
         print("[*] Read excel file {} done. Start initialization.".format(self.excelPath))
         self.checkSchTime()
         self.testSch()
+        self.parseCells()
 
 
 
@@ -43,6 +41,9 @@ class Schedule:
 
 
     def getTodaySch(self,weekday):
+        """
+        must have weekday parameter, for testSch function
+        """
         weekdayMap = {0:"星期一",1:"星期二",2:"星期三",3:"星期四",4:"星期五",5:"星期六",6:"星期天"}
         self.weekday = weekdayMap[weekday]
         self.todaySch = self.schedule[["time_intervals",self.weekday]]
@@ -134,12 +135,16 @@ class Schedule:
         def between(time,schIndex):
             # schIndex is the label name(start from 1)
             time_interval = self.todaySch["time_intervals"][schIndex]
-            if time >= time_interval[0] + timedelta(minutes=-self.advancedRdTime) and time < time_interval[0]:
+            if time >= time_interval[0] + timedelta(seconds=-self.advancedRdTime) and time < time_interval[0]:
                 return True
             else:
                 return False
-        print("[*] Query time {}".format(timeStr))
+        # print("[*] Query time {}".format(timeStr))
         theTime = scheduleTime.parseTime(timeStr) # check also included in the function
+        if between(theTime,0):
+            self.getTodaySch(datetime.today().weekday()) # update
+            self.parseCells()
+        
         for i in range(self.todaySch.shape[0]):
             if between(theTime,i):
                 return i,self.todaySch[self.weekday][i]
@@ -155,7 +160,7 @@ class Schedule:
         todaySch["time_intervals"] = format_TimeIntervals(todaySch["time_intervals"])
         todaySch.columns = ["时间","安排"]
         todaySch.set_index("时间",inplace=True)
-        res = "Today's Notice: \n {}\n".format(self.todayNotice)
+        res = "今天({})的安排: \n {}\n".format(self.weekday,self.todayNotice)
         if type == 1:
             """
             12:13-13:13 xxx
@@ -207,6 +212,7 @@ class Schedule:
 if __name__ == "__main__":
     sch = Schedule("example.xlsx")
     print(sch.formatTodaySch())
+    print(sch.todaySch)
     # print(sch.querySch("22:59"))
 
     # sch.getTodaySch(weekday)

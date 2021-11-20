@@ -5,10 +5,11 @@ import pickle
 import sys
 from os import error, path
 import json
+from random import choice
 
 
 class XiaoYiJiang:
-    def __init__(self,CORPID,CORPSECRET,AGENTID,TOUSER,scriptFolderPath,nickname="主人"):
+    def __init__(self,CORPID,CORPSECRET,AGENTID,TOUSER,scriptFolderPath,ana="xiaoyi_ana.txt",nickname="主人",morningGreeting = "今天又是新的一天。干劲满满哦！来看看今天的计划吧！"):
         self.CORPID = CORPID
         self.CORPSECRET = CORPSECRET
         self.AGENTID = AGENTID
@@ -21,8 +22,11 @@ class XiaoYiJiang:
         self.errorLog = path.join(self.scriptFolderPath,"XiaoYi.log")
 
         self.nickname = nickname # your nickname
-        self.morning_greeting = self.nickname + "，今天又是新的一天。干劲满满哦！来看看今天的甜点吧！"
-        self.prompt = self.nickname + "，看在我好心提醒你的分上，你也要加油哦！"
+        self.morning_greeting = self.nickname + "，" + morningGreeting
+        with open(path.join(self.scriptFolderPath,ana),"r",encoding="UTF-8") as f:
+            self.prompts = f.readlines()
+            self.prompts = [self.prompts[i][:-1] for i in range(len(self.prompts))]
+        # self.prompt = self.nickname + "," + "看在我好心提醒你的分上，你也要加油哦！"
 
     
     def checkToken(self,curTime):
@@ -47,6 +51,9 @@ class XiaoYiJiang:
     def writeLog(self,log):
         with open(self.errorLog,"a") as f:
             f.writelines("[{}] {}]".format(datetime.now(),log))
+        
+    def randomPrompt(self):
+        return self.nickname + "，" + choice(self.prompts)
 
     def sendMessage(self,message:str,type="markdown"):
         """
@@ -56,11 +63,11 @@ class XiaoYiJiang:
             raise Exception("Unsupported function parameter 'type'")
         self.get_accessToken() # check token
         print("[*] Check access token done.")
-        print("[*] Send schedule remind message.")
+        print("[{}] Send schedule remind message.".format(datetime.now().strftime("%H:%M")))
         if type == "markdown":
             message = message[:-1] if message[-1] == "\n" else message
             message = "`" + message + "`\n"
-            message += "\n" + self.prompt
+            message += "\n" + self.randomPrompt()
         
         tmpMsg = {
             "touser" : self.TOUSER,
@@ -83,8 +90,4 @@ class XiaoYiJiang:
         
 
 if __name__ == "__main__":
-    # FIXME need to detele before public
-    xiaoYi = XiaoYiJiang("ww467b245fc82994a0","jGOo-_mBrGbLTwrxwnUtYAYcljys4Dx8FLQDM8HUWsE",1000002,"YangZiQi",sys.path[0])
-    message="""`Hello` Sir!""" 
-    xiaoYi.sendMessage(message)
-
+    pass

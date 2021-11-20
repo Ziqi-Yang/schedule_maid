@@ -1,5 +1,12 @@
 CORPID: xxxx
 CORPSECRET: xxxx
-AGENTID: 100861111
+AGENTID: xxxx
 TOUSER:
   - XXname
+
+excelFilePath: example.xlsx
+
+XiaoYi:
+  - nickname: 主人
+  - morningGreeting: 今天又是新的一天。干劲满满哦！来看看今天的计划吧！
+  - ana: xiaoyi_ana.txt
