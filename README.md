@@ -29,11 +29,11 @@ XiaoYi:
 The format of xlsx file should refer to `example.xlsx`
 In any of the cells, any contents in the brackets will be ignored by this program(except labels, which will be introduced )
 There are two types of label should be noticed:
-- multi
+- multi  
 ![multi](./res/multi.png)
 In this picture,  
 The label `multi` allow you to put multi shedule into a single cell, and the line `[心理课 214]` will be ignored.
 
-- section
+- section  
 ![section](./res/section.png)
 The function of `section` is to merge the current cell with the lower cell. So the lower cell need to be `blank`, otherwise it will be overrided
