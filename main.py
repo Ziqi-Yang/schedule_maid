@@ -32,10 +32,8 @@ while True:
         if sch[0] == 0:
             XiaoYi.sendMessage(XiaoYi.morning_greeting,type="text")
             time.sleep(0.5) # to avoid message out-of-order
-            print(my_schedule.todaySch)
             XiaoYi.sendMessage(my_schedule.formatTodaySch(type=2))
             time.sleep(0.5)
         XiaoYi.sendMessage(sch[1])
-        print(my_schedule.todaySch)
         time.sleep(my_schedule.advancedRdTime)
     time.sleep(60)
