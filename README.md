@@ -35,5 +35,5 @@ In this picture,
 The label `multi` allow you to put multi shedule into a single cell, and the line `[心理课 214]` will be ignored.
 
 - section
-![section](./res/multi.png)
+![section](./res/section.png)
 The function of `section` is to merge the current cell with the lower cell. So the lower cell need to be `blank`, otherwise it will be overrided
