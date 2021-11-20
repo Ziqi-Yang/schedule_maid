@@ -1,3 +1,7 @@
 _config.yaml
 ~$*.xlsx
 test
+__pycache__
+schedule.xlsx
+*.pkl
+*.log
