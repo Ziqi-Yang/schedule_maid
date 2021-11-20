@@ -56,10 +56,12 @@ class Schedule:
             "section": combine the current cell with next cell(lower cell should be blank or has "section" label only)
         anything in the brackets will be ignored when parsing, but them will be in the body message(i.e. they will be sent)
         """
-        schduleIndex = 0 # for addSchdule function
-        for index in range(self.todaySch.shape[0]):
-            cellIndex = index + 1 # pd.index label
-            cell = self.todaySch[self.weekday][cellIndex]
+        index = 0
+        self.todaySch.index = range(self.todaySch.shape[0]) # let index start from zero
+        while index < self.todaySch.shape[0]:
+            if index == 13:
+                print(self.todaySch)
+            cell = self.todaySch[self.weekday][index]
             if isnull(cell):
                 continue
             cellLines = cell.strip().split("\n")
@@ -68,6 +70,7 @@ class Schedule:
                 pass
             elif cellMode == "multi":
                 addScheduleMode = 1
+                indexOverPlus = 0 # avoid indexOverplus, value could be 0 or 1
                 for line in cellLines:
                     line = line.strip()
                     if line[0] == "[" and line[-1] == "]":
@@ -79,9 +82,13 @@ class Schedule:
                         timeInterval = scheduleTime.TimeInterval(line[:11]).time_interval
                         newSchduleContent = line[11:].strip()
                         newSchdule = pd.DataFrame([[timeInterval,newSchduleContent]],columns=["time_intervals",self.weekday])
-                        self.addSchedule(schduleIndex,newSchdule,mode=addScheduleMode)
+                        self.addSchedule(index,newSchdule,mode=addScheduleMode)
+                        if addScheduleMode == -1:
+                            indexOverPlus = 1
                         addScheduleMode = -1 if addScheduleMode == 1 else -1 # only change once
-                        schduleIndex += 1
+                        index += 1
+                index -= indexOverPlus
+                        
 
             elif cellMode == "section":
                 schedule = ""
@@ -95,10 +102,9 @@ class Schedule:
                         schedule += line + "\n"
                 if len(schedule) != 0:
                     schedule = schedule[:-1] # delete "\n"
-                self.todaySch[self.weekday][cellIndex] = schedule
-                self.todaySch[self.weekday][cellIndex + 1] = "继续-" + schedule
-
-            schduleIndex += 1
+                self.todaySch[self.weekday][index] = schedule
+                self.todaySch[self.weekday][index + 1] = "继续-" + schedule
+            index += 1
         scheduleTime.checkCorrect(list(self.todaySch["time_intervals"])) # check for time overlap
 
     def testSch(self):
@@ -139,7 +145,7 @@ class Schedule:
     
 if __name__ == "__main__":
     sch = Schedule("example.xlsx")
-    # print(sch.todaySch)
+    print(sch.todaySch)
     # print(sch.querySch("22:59"))
 
     # sch.getTodaySch(weekday)
