@@ -18,10 +18,11 @@ class XiaoYiJiang:
         self.token_expires_time = 7200 #ACCESS_TOKEN expires_time
         self.scriptFolderPath = scriptFolderPath
         self.tokenFilePath = path.join(self.scriptFolderPath, "token_time_log.pkl")
+        self.errorLog = path.join(self.scriptFolderPath,"XiaoYi.log")
 
         self.nickname = nickname # your nickname
         self.morning_greeting = self.nickname + "，今天又是新的一天。干劲满满哦！来看看今天的甜点吧！"
-        self.prompt = self.nickname + "，我都好心提醒你了，所以你也要加油哦！"
+        self.prompt = self.nickname + "，看在我好心提醒你的分上，你也要加油哦！"
 
     
     def checkToken(self,curTime):
@@ -44,24 +45,29 @@ class XiaoYiJiang:
             self.ACCESS_TOKEN = rq["access_token"]
     
     def writeLog(self,log):
-        with open(path.join(self.scriptFolderPath,"XiaoYi.log"),"a") as f:
+        with open(self.errorLog,"a") as f:
             f.writelines("[{}] {}]".format(datetime.now(),log))
 
-    def sendMessage(self,markdown:str):
-        """markdown"""
+    def sendMessage(self,message:str,type="markdown"):
+        """
+        type: "text", "markdown"
+        """
+        if type not in ["text","markdown"]:
+            raise Exception("Unsupported function parameter 'type'")
         self.get_accessToken() # check token
         print("[*] Check access token done.")
         print("[*] Send schedule remind message.")
-        markdown = markdown[:-1] if markdown[-1] == "\n" else markdown
-        markdown = "`" + markdown + "`\n"
-        markdown += self.prompt
+        if type == "markdown":
+            message = message[:-1] if message[-1] == "\n" else message
+            message = "`" + message + "`\n"
+            message += "\n" + self.prompt
         
         tmpMsg = {
             "touser" : self.TOUSER,
-            "msgtype": "markdown",
+            "msgtype": type,
             "agentid": self.AGENTID,
-            "markdown": {
-                "content": markdown
+            type: {
+                "content": message
             }
         }
         newMessage = bytes(json.dumps(tmpMsg),"utf-8")
@@ -70,6 +76,7 @@ class XiaoYiJiang:
         rq = requests.post(url,newMessage).json()
         if rq["errcode"] != 0:
             self.writeLog("ErrorCode: {}\n{}\n".format(rq["errcode"],rq["errmsg"]))
+            print("[******] Error occured. See errors in the {}".format(self.errorLog))
         # return rq["msgid"]
 
 
@@ -78,7 +85,6 @@ class XiaoYiJiang:
 if __name__ == "__main__":
     # FIXME need to detele before public
     xiaoYi = XiaoYiJiang("ww467b245fc82994a0","jGOo-_mBrGbLTwrxwnUtYAYcljys4Dx8FLQDM8HUWsE",1000002,"YangZiQi",sys.path[0])
-    xiaoYi.get_accessToken()
     message="""`Hello` Sir!""" 
     xiaoYi.sendMessage(message)
 

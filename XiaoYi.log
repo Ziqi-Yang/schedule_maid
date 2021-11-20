@@ -1,3 +1,17 @@
 [2021-11-16 08:14:44.231787] ErrorCode: 40008
 Warning: wrong json format. invalid message type, hint: [1637050485_209_dc447ef1eb2b70797bf379a5697e333f], from ip: 115.171.222.97, more info at https://open.work.weixin.qq.com/devtool/query?e=40008][2021-11-16 08:16:15.041247] ErrorCode: 40008
-Warning: wrong json format. invalid message type, hint: [1637050576_210_d482d5c17e241a59fb4702332d072177], from ip: 115.171.222.97, more info at https://open.work.weixin.qq.com/devtool/query?e=40008]
+Warning: wrong json format. invalid message type, hint: [1637050576_210_d482d5c17e241a59fb4702332d072177], from ip: 115.171.222.97, more info at https://open.work.weixin.qq.com/devtool/query?e=40008][2021-11-20 12:23:34.761644] ErrorCode: 44004
+empty content, hint: [1637382214057800479704690], from ip: 115.171.222.94, more info at https://open.work.weixin.qq.com/devtool/query?e=44004
+][2021-11-20 12:23:35.093431] ErrorCode: 44004
+empty content, hint: [1637382214156051002981055], from ip: 115.171.222.94, more info at https://open.work.weixin.qq.com/devtool/query?e=44004
+][2021-11-20 12:23:35.412929] ErrorCode: 44004
+empty content, hint: [1637382215340380579516758], from ip: 115.171.222.94, more info at https://open.work.weixin.qq.com/devtool/query?e=44004
+][2021-11-20 12:28:40.649122] ErrorCode: 44004
+empty content, hint: [1637382520324050568151187], from ip: 115.171.222.94, more info at https://open.work.weixin.qq.com/devtool/query?e=44004
+][2021-11-20 12:28:40.984878] ErrorCode: 44004
+empty content, hint: [1637382520065491292727325], from ip: 115.171.222.94, more info at https://open.work.weixin.qq.com/devtool/query?e=44004
+][2021-11-20 12:28:41.290177] ErrorCode: 44004
+empty content, hint: [1637382521593813911605839], from ip: 115.171.222.94, more info at https://open.work.weixin.qq.com/devtool/query?e=44004
+][2021-11-20 12:30:10.825846] ErrorCode: 44004
+empty content, hint: [1637382610075721147453771], from ip: 115.171.222.94, more info at https://open.work.weixin.qq.com/devtool/query?e=44004
+]

@@ -20,12 +20,16 @@ with open("_config.yaml") as f: # FIXME change _config.yaml to config.yaml
 my_schedule = Schedule.Schedule(excelFilePath)
 XiaoYi = XiaoYiJiang.XiaoYiJiang(config["CORPID"],config["CORPSECRET"],config["AGENTID"],config["TOUSER"],scriptFolderPath)
 XiaoYi.get_accessToken()
-print(my_schedule.todaySch)
 
 while True:
-    timeStr = datetime.now().strftime("%H:%M")
-    message = my_schedule.querySch(timeStr)
-    if message != None:
-        XiaoYi.sendMessage(message)
+    # timeStr = datetime.now().strftime("%H:%M")
+    timeStr = "06:55"
+    sch = my_schedule.querySch(timeStr)
+    if sch != None:
+        message = ""
+        if sch[0] == 0:
+            XiaoYi.sendMessage(XiaoYi.morning_greeting,type="text")
+            XiaoYi.sendMessage(my_schedule.formatTodaySch(type=2))
+        XiaoYi.sendMessage(sch[1])
         time.sleep(11 * 60)
     time.sleep(60)
