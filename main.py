@@ -1,7 +1,7 @@
 import yaml
 import time
 from os import path
-from datetime import datetime
+from datetime import date, datetime
 import XiaoYiJiang
 import Schedule
 import sys
@@ -20,17 +20,12 @@ with open("_config.yaml") as f: # FIXME change _config.yaml to config.yaml
 my_schedule = Schedule.Schedule(excelFilePath)
 XiaoYi = XiaoYiJiang.XiaoYiJiang(config["CORPID"],config["CORPSECRET"],config["AGENTID"],config["TOUSER"],scriptFolderPath)
 XiaoYi.get_accessToken()
+print(my_schedule.todaySch)
 
-message = my_schedule.querySch("7:50")
-def formatMd(text:str):
-    text.replace("\n","  \n")
-
-XiaoYi.sendMessage(message)
-
-# i = 0 # FIXME for test
-# while True:
-    
-#     time.sleep(1)
-#     i += 1
-#     if i == 4:
-#         break
+while True:
+    timeStr = datetime.now().strftime("%H:%M")
+    message = my_schedule.querySch(timeStr)
+    if message != None:
+        XiaoYi.sendMessage(message)
+        time.sleep(11 * 60)
+    time.sleep(60)

@@ -20,8 +20,8 @@ class XiaoYiJiang:
         self.tokenFilePath = path.join(self.scriptFolderPath, "token_time_log.pkl")
 
         self.nickname = nickname # your nickname
-        self.morning_greeting = self.nickname + "，今天又是新的一天。干劲满满哦！"
-        self.prompt = self.nickname + "，加油哦！"
+        self.morning_greeting = self.nickname + "，今天又是新的一天。干劲满满哦！来看看今天的甜点吧！"
+        self.prompt = self.nickname + "，我都好心提醒你了，所以你也要加油哦！"
 
     
     def checkToken(self,curTime):
@@ -49,6 +49,8 @@ class XiaoYiJiang:
 
     def sendMessage(self,markdown:str):
         """markdown"""
+        self.get_accessToken() # check token
+        print("[*] Check access token done.")
         print("[*] Send schedule remind message.")
         markdown = markdown[:-1] if markdown[-1] == "\n" else markdown
         markdown = "`" + markdown + "`\n"
@@ -68,8 +70,7 @@ class XiaoYiJiang:
         rq = requests.post(url,newMessage).json()
         if rq["errcode"] != 0:
             self.writeLog("ErrorCode: {}\n{}\n".format(rq["errcode"],rq["errmsg"]))
-
-
+        # return rq["msgid"]
 
 
         
@@ -80,3 +81,4 @@ if __name__ == "__main__":
     xiaoYi.get_accessToken()
     message="""`Hello` Sir!""" 
     xiaoYi.sendMessage(message)
+

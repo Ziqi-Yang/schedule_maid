@@ -48,6 +48,10 @@ class Schedule:
         self.todaySch = self.schedule[["time_intervals",self.weekday]]
         self.todayNotice = self.schedule.iloc[0,weekday+1]
         self.todaySch = self.todaySch.drop([0]) # drop notice, don't use inplace parameter because of some rules
+        self.todaySch.index = range(self.todaySch.shape[0]) # let index start from zero
+    
+        
+
     
     def parseCells(self):
         """
@@ -57,7 +61,6 @@ class Schedule:
         anything in the brackets will be ignored when parsing, but them will be in the body message(i.e. they will be sent)
         """
         index = 0
-        self.todaySch.index = range(self.todaySch.shape[0]) # let index start from zero
         while index < self.todaySch.shape[0]:
             if index == 13:
                 print(self.todaySch)
@@ -135,17 +138,41 @@ class Schedule:
         print("[*] Query time {}".format(timeStr))
         theTime = scheduleTime.parseTime(timeStr) # check also included in the function
         for i in range(self.todaySch.shape[0]):
-            schIndex = i + 1
-            if between(theTime,schIndex):
-                return self.todaySch[self.weekday][schIndex]
+            if between(theTime,i):
+                return self.todaySch[self.weekday][i]
 
+    def formatTodaySch(self):
+        def format_TimeIntervals(timeIntervals:list):
+            res = []
+            for time_interval in timeIntervals:
+                tmp_TI = [time_interval[i].strftime("%H:%M") for i in range(2)]
+                res.append("-".join(tmp_TI))
+            return res
+        todaySch = self.todaySch.copy()
+        todaySch["time_intervals"] = format_TimeIntervals(todaySch["time_intervals"])
+        todaySch.columns = ["时间","安排"]
+        todaySch.set_index("时间",inplace=True)
+        res = "Today's Notice: \n   {}\n".format(self.todayNotice)
+        for x in todaySch.index:
+            tasks = todaySch.loc[x][0]
+            if isnull(tasks):
+                tasks = ""
+            tasks = tasks.split("\n") # shouldn't use raw string
+            res += x + " "
+            res += tasks[0] + "\n"
+            if len(tasks) > 1:
+                for task in tasks[1:]:
+                    res += " " * (len(x) + 1)
+                    res += task + "\n"
+        return res
+            
 
 
         
     
 if __name__ == "__main__":
     sch = Schedule("example.xlsx")
-    print(sch.todaySch)
+    print(sch.formatTodaySch())
     # print(sch.querySch("22:59"))
 
     # sch.getTodaySch(weekday)
