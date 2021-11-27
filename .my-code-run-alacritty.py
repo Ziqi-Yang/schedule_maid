@@ -1,3 +1,6 @@
+import time
+STARTTIME=time.time()
+
 import yaml
 import time
 from os import path
@@ -64,3 +67,8 @@ while True:
         XiaoYi.sendMessage(sch[1])
         time.sleep(my_schedule.advancedRdTime)
     time.sleep(60)
+
+ENDTIME=time.time()
+print('\n\n')
+print('-'*30)
+print('Total Time: {}s'.format(ENDTIME-STARTTIME))

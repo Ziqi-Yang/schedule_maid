@@ -3,7 +3,7 @@ from pandas import isnull
 import pandas as pd
 from datetime import datetime, timedelta
 import re
-import scheduleTime
+from core import scheduleTime
 
 
 class Schedule:

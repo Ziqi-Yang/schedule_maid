@@ -1,0 +1,19 @@
+InUse: false
+
+CORPID: xxxx
+CORPSECRET: xxxx
+AGENTID: xxxx
+TOUSER:
+  - XXname
+
+excelFileName: example.xlsx
+
+XiaoYi:
+  nickname: 主人
+  morningGreeting: 今天又是新的一天。干劲满满哦！来看看今天的计划吧！
+  ana:
+    - 看在我好心提醒你的分上，你也要加油哦！
+    - 哼哼。
+    - 看到你不努力的样子，我也要失去干劲了。要不，我就不提醒你了！
+    - 学习时候认真，到玩的时候才开心呢！
+    - 别看我平时弱不禁风的样子，我认真起来可是很可怕的哦。
